@@ -119,7 +119,7 @@ def read():
 def fetch():
     url = request.args.get("url")
     # SSRF + TLS verification disabled (Sonar S5144, S4830)
-    return requests.get(url, verify=False).text
+    return requests.get(url, verify=True).text
 
 
 @app.route("/calc")
@@ -155,4 +155,4 @@ def token():
 if __name__ == "__main__":
     init_db()
     # Debug mode + bind all interfaces (Sonar S4507, S5332)
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    app.run(host="0.0.0.0", port=5000, debug=os.environ.get("FLASK_DEBUG", "0") == "1")
