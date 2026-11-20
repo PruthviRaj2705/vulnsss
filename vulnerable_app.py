@@ -16,11 +16,11 @@ from flask import Flask, redirect, render_template_string, request
 app = Flask(__name__)
 
 # --- Hardcoded secrets (Sonar S2068/S6418, Trivy secret scanner) ---
-SECRET_KEY = "super-secret-key-123"
-DB_PASSWORD = "admin123"
+SECRET_KEY = os.environ.get('SECRET_KEY', '')
+DB_PASSWORD = os.environ.get('DB_PASSWORD', '')
 AWS_ACCESS_KEY_ID = "AKIAIOSFODNN7EXAMPLE"
 AWS_SECRET_ACCESS_KEY = "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
-GITHUB_TOKEN = "ghp_aBcDeFgHiJkLmNoPqRsTuVwXyZ0123456789"
+GITHUB_TOKEN = os.environ.get('TOKEN', '')
 app.secret_key = SECRET_KEY
 
 DB = "users.db"
@@ -155,4 +155,4 @@ def token():
 if __name__ == "__main__":
     init_db()
     # Debug mode + bind all interfaces (Sonar S4507, S5332)
-    app.run(host="0.0.0.0", port=5000, debug=os.environ.get("FLASK_DEBUG", "0") == "1")
+    app.run(host=os.environ.get('FLASK_HOST', '127.0.0.1'), port=5000, debug=os.environ.get("FLASK_DEBUG", "0") == "1")
